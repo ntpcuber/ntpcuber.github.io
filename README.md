@@ -89,8 +89,8 @@ Simply open: index.html in your browser.
 ---
 
 ### Option 2: Local Server (Recommended)
-python -m http.server
-Then visit:
+python -m http.server \
+Then visit: \
 http://localhost:8000
 
 ---
@@ -145,8 +145,8 @@ window.dispatchEvent(new CustomEvent('languageChanged'))
 
 
 ### 🧑‍💻 Author
-**Natthaphat Mahtani**
-Speedcuber & Developer
+**Natthaphat Mahtani** \
+Speedcuber & Developer \
 Focused on building structured and efficient learning systems for cubers.
 
 ### ⭐ Support
