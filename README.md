@@ -52,6 +52,7 @@ https://jashan337.github.io/ntpcuber2/index.html
 ---
 
 ## 📁 Project Structure
+```bash
 ntpcuber2/
 ├── algorithms/
 │   ├── 2x2/
@@ -76,6 +77,7 @@ ntpcuber2/
 ├── learning-page.html
 ├── resources.html
 └── README.md
+```
 
 ---
 
@@ -124,7 +126,7 @@ This project is hosted using **GitHub Pages**.
 
 ```js
 window.dispatchEvent(new CustomEvent('languageChanged'))
-```js
+```
 
 ---
 
