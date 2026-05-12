@@ -17,15 +17,16 @@ const content = {
     journeyTitle: 'My Cubing Journey',
     journeySteps: [
         { year: 'Start', ach: 'Discovered the cube with a few pieces left unsolved and complete it without help.' },
-        { year: 'Competed 2 Years', ach: 'Podiumed on 3x3 on the national championship competition.' },
-        { year: '2022: Competition', ach: 'Attended my first WCA competition; reached 3x3 Finals.' },
-        { year: '2024: Advanced', ach: 'Mastered full ZBLL and 1-look Last Layer strategies.' },
-        { year: '2026: Coaching', ach: 'Launched NTP Cuber to coach students globally.' }
+        { year: 'Competed 2-3 Years', ach: 'Placed 3rd on 3x3 at National Championship, and break my first ever National Record.' },
+        { year: '2020-2021', ach: 'Started learning ZBLL and complete all necessary sets.' },
+        { year: '2022', ach: 'Become the first person in Thailand to break sub-7 barrier on 3x3.' },
+        { year: '2024', ach: 'Ranked 9th in the world at the time for fastest 3x3 solve.' },
+        { year: '2026', ach: 'Keep competing and launch NTP Cuber Academy.' }
     ],
     // ... rest of content same as before
     introTitle: 'About Me',
     introText1: 'Hi, I’m Natthaphat Mahtani. I am a competitive speedcuber dedicated to helping others break their personal records through structured, logic-based, and fun training.',
-    introText2: 'This website provides a complete ecosystem for cubers: from beginner courses to advanced techniques like Domino Reduction and ZBLL, plus 1-on-1 coaching to refine your hardware and execution.',
+    introText2: 'This website provides a complete ecosystem for cubers: from beginner courses to advanced techniques on various events, plus 1-on-1 coaching to refine your hardware and execution.',
     courseCards: [
         { title: 'Beginner 3×3', price: '$19', desc: 'Learn to solve from zero.' },
         { title: 'Intermediate CFOP', price: '$39', desc: 'Improve efficiency.' },
@@ -48,19 +49,20 @@ const content = {
     },
     th: {
     nav: ['หน้าแรก', 'คอร์สเรียน', 'เรียนตัวต่อตัว', 'แหล่งเรียนรู้', 'ติดต่อ'],
-    heroSubtitle: 'เชี่ยวชาญรูบิก ด้วยคอร์สเรียนที่เป็นระบบ',
+    heroSubtitle: 'เชี่ยวชาญรูบิกด้วยคอร์สเรียนที่เป็นระบบ แหล่งเรียนรู้ที่ทันสมัย และบริการโค้ชตัวต่อตัวเพื่อพัฒนาทักษะได้ตรงจุด',
     journeyTitle: 'เส้นทางรูบิกของผม',
     journeySteps: [
-        { year: '2018: เริ่มต้น', ach: 'เริ่มหัดเล่นรูบิกและทำสถิติครั้งแรกที่ 2 นาที' },
-        { year: '2020: ต่ำกว่า 20 วิ', ach: 'จำสูตร PLL และ OLL ได้ครบ' },
-        { year: '2022: การแข่งขัน', ach: 'เข้าร่วมการแข่งขัน WCA ครั้งแรก' },
-        { year: '2024: ขั้นสูง', ach: 'ฝึกฝนสูตร ZBLL จนชำนาญ' },
-        { year: '2026: การสอน', ach: 'เปิดตัว NTP Cuber เพื่อสอนนักเรียนทั่วโลก' }
+        { year: 'เริ่มต้น', ach: 'แก้รูบิกที่ถูกวางไว้โดยเหลือเพียงไม่กี่ชิ้นได้ด้วยตัวเอง เกิดความสนใจ' },
+        { year: 'เข้าร่วมแข่งขัน 2-3 ปี', ach: 'ได้อันดับ 3 ในการแข่งขันระดับประเทศ และได้ทำลายสถิติประเทศครั้งแรก' },
+        { year: '2020-2021', ach: 'เริ่มเรียนรู้และทบทวน ZBLL อย่างจริงจัง จนสามารถจำเซตที่สำคัญได้ครบ' },
+        { year: '2022', ach: 'เป็นคนไทยคนแรกที่ทำลายกำแพงเวลา 7 วินาทีของรูบิก 3x3' },
+        { year: '2024', ach: 'แก้รูบิกด้วยเวลาเร็วที่สุดขึ้นเป็นอันดับ 9 ของโลกในตอนนั้น' },
+        { year: '2026', ach: 'แข่งขันและทำสถิติต่อไป แล้วเปิดตัว NTP Cuber Academy เพื่อเผยแพร่ความรู้รูบิก' }
     ],
     // ... rest of content same as before
     introTitle: 'เกี่ยวกับผม',
     introText1: 'สวัสดีครับผมณัฐภัทร มาทานี ผมเป็นนักแข่งรูบิกที่มุ่งเน้นการช่วยให้ทุกคนทำลายสถิติส่วนตัวด้วยการฝึกฝนอย่างเป็นระบบและมีความสนุกไปกับการฝึก',
-    introText2: 'เว็บไซต์นี้เป็นแหล่งรวมทุกอย่างสำหรับผู้ที่สนใจพัฒนาความสามารถด้านรูบิก ตั้งแต่คอร์สพื้นฐานไปจนถึงเทคนิคขั้นสูงอย่าง Domino Reduction และ ZBLL พร้อมคลาสสอนแบบตัวต่อตัวเพื่อพัฒนาทั้งทักษะและวิธีคิดของคุณ',
+    introText2: 'เว็บไซต์นี้เป็นแหล่งรวมทุกอย่างสำหรับผู้ที่สนใจพัฒนาความสามารถด้านรูบิก ตั้งแต่คอร์สพื้นฐานไปจนถึงเทคนิคขั้นสูงอย่างสำหรับรูบิกหลายประเภท พร้อมบริการโค้ขแบบตัวต่อตัวเพื่อพัฒนาทั้งทักษะและวิธีคิดของคุณ',
     courseCards: [
         { title: 'พื้นฐาน 3×3', price: '฿690', desc: 'เริ่มต้นแก้รูบิกส์ตั้งแต่ศูนย์' },
         { title: 'ระดับกลาง CFOP', price: '฿1,390', desc: 'พัฒนาเทคนิคและความเร็ว' },
