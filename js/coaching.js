@@ -32,7 +32,7 @@ const cnt = {
 const translations = {
     en: {
         title: "Elite Speedcubing Coaching",
-        subtitle: "Master advanced methods like EO to ZB, X-cross, and Domino Reduction.",
+        subtitle: "Break through your plateaus with personalized training in advanced methods from a well-rounded competitive experience coach.",
         pricingTitle: "Coaching Options",
         bookTitle: "Reserve Your Session",
         formGoal: "Your Goal / Focus for this session",
@@ -74,13 +74,13 @@ const translations = {
         ]
     },
     th: {
-        title: "สอนรูบิกส์ระดับมืออาชีพ",
-        subtitle: "ฝึกฝนเทคนิคขั้นสูง เช่น EO to ZB, X-cross และ Domino Reduction",
+        title: "โค้ชรูบิกระดับมืออาชีพ",
+        subtitle: "ยกระดับการแก้รูบิคด้วยเทคนิคระดับสูงและการวิเคราะห์เฉพาะบุคคล โดยโค้ชที่มีประสบการณ์การแข่งขันรอบด้าน",
         pricingTitle: "แพ็กเกจการสอน",
         bookTitle: "จองเวลาเรียนของคุณ",
         formName: "ชื่อ-นามสกุล",
         formEmail: "อีเมล",
-        formGoal: "เป้าหมายหรือสิ่งที่ต้องการเน้นในเซสชันนี้",
+        formGoal: "เป้าหมายหรือสิ่งที่ต้องการเน้นใน session นี้",
         formService: "เลือกบริการ",
         formButton: "ยืนยันการจอง",
         paymentInstruction: "สแกน QR เพื่อชำระเงิน",
@@ -243,6 +243,10 @@ function renderProgressBlocks(mode) {
 
 function updateProgressBlocks(stepNumber) {
     const blocks = document.querySelectorAll('.progress-block');
+    const service = document.getElementById('service-select').value;
+    const isCritique = service && service.includes('Critique');
+    
+    const totalSteps = isCritique ? 2 : 3;
 
     blocks.forEach(block => {
         const stepForThisBlock = Number(block.dataset.step);
@@ -290,16 +294,24 @@ function scrollToBooking(serviceName) {
 }
 
 function showStep(stepNumber) {
-    currentStep = stepNumber;
     
     // 1. Hide all steps
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     
     // 2. Show the target step
     document.getElementById(`step-${stepNumber}`).classList.remove('hidden');
+    // const target = document.getElementById(`stepNumber-${stepNumber}`);
+    // if (target) target.classList.remove('hidden');
+
+    const service = document.getElementById('service-select').value;
+    const isCritique = service && service.toLowerCase().includes('critique');
+    
+    renderProgressBlocks(isCritique ? 2 : 3);
     
     // 3. Update the progress bar
     updateProgressBlocks(stepNumber);
+
+    currentStep = stepNumber;
 }
 
 function nextStep(step) {
@@ -330,6 +342,8 @@ function nextStep(step) {
     //     step = 1;
     // }
 
+    currentStep = step;
+
     // Toggle visibility
     document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
     document.getElementById(`step-${step}`).classList.remove('hidden');
@@ -339,16 +353,16 @@ function nextStep(step) {
     if (backBtn) backBtn.onclick = () => nextStep(isCritique ? 1 : 2);
 
     // for progress bar
-    function updateProgressBar(step) {
-        const bar = document.getElementById('progress-bar');
-        const width = (step / 3) * 100;
-        bar.style.width = `${width}%`;
-    }
+    // function updateProgressBar(step) {
+    //     const bar = document.getElementById('progress-bar');
+    //     const width = (step / 3) * 100;
+    //     bar.style.width = `${width}%`;
+    // }
 
     // updateProgressBar(step); // Update the bar visual
 
-    currentStep = step;
     updateProgressBlocks(currentStep);
+    showStep(currentStep);
 }
 
 function render() {
@@ -423,6 +437,9 @@ function render() {
     //if (navbar?.updateLanguageDisplay) navbar.updateLanguageDisplay();
 
     document.getElementById('service-select').dispatchEvent(new Event('change'));
+
+    showStep(currentStep);
+    // setupServiceLogic();
 }
 
 function setupServiceLogic() {
@@ -510,7 +527,7 @@ function setupServiceLogic() {
 
 function generateTimeOptions(id) {
     const s = document.getElementById(id);
-    s.innerHTML = '<option value="">Select time</option>';
+    s.innerHTML = '<option value="" data-en="Select time" data-th="เลือกเวลา">Select time</option>';
     for (let h = 0; h <= 23; h++) {
         for (let m of ['00', '30']) {
             let v = `${String(h).padStart(2, '0')}:${m}`;
@@ -544,5 +561,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     window.addEventListener('languageChanged', () => {
         render();
+        // 2. สั่งให้แสดงผล Step ล่าสุดที่ผู้ใช้เปิดค้างไว้ (แก้ปัญหาเมนูหาย)
+        document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
+        const activeStep = document.getElementById(`step-${currentStep}`);
+        if (activeStep) activeStep.classList.remove('hidden');
+        //document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+
+        // 3. อัปเดตแถบ Progress Bar ให้เป็นสีตาม Step ปัจจุบัน
+        updateProgressBlocks(currentStep);
+        
+        // 4. ตรวจสอบว่าฟิลด์ Video Link ควรโชว์หรือซ่อน (สำหรับบริการ Critique)
+        setupServiceLogic();
     })
 });

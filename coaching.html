@@ -37,14 +37,14 @@
                     <div class="bg-neutral-900 border border-neutral-800 p-2 rounded-3xl overflow-hidden">
                         <img src="image/coach_profile.jpg" alt="Coach" class="w-full aspect-[4/5] object-cover rounded-2xl mb-8">
                         <div class="p-6">
-                            <h2 class="text-3xl font-bold text-white mb-2">Natthaphat Mahtani</h2>
-                            <p class="text-blue-500 font-semibold mb-6">Thailand’s best All-rounder</p>
+                            <h2 class="text-3xl font-bold text-white mb-2" data-en="Natthaphat Mahtani" data-th="ณัฐภัทร มาทานี">Natthaphat Mahtani</h2>
+                            <p class="text-blue-500 font-semibold mb-6" data-en="Thailand's best All-rounder" data-th="นักแข่งที่มีความสามารถรอบด้านมากที่สุดในไทย">Thailand’s best All-rounder</p>
                             <div class="space-y-4">
-                                <h4 class="text-sm uppercase tracking-widest text-neutral-500 font-bold">Achievement Highlights</h4>
+                                <h4 class="text-sm uppercase tracking-widest text-neutral-500 font-bold" data-en="Achievement Highlights" data-th="ผลงานโดดเด่น">Achievement Highlights</h4>
                                 <ul class="space-y-3">
-                                    <li class="flex items-center gap-3 text-neutral-300"><span class="text-blue-500">🏆</span> 3x3 single peak ranking 9th global</li>
-                                    <li class="flex items-center gap-3 text-neutral-300"><span class="text-blue-500">🏅</span> Finalist in Continental Championship</li>
-                                    <li class="flex items-center gap-3 text-neutral-300"><span class="text-blue-500">⏱️</span> 10+ years experience</li>
+                                    <li class="flex items-start gap-3 text-neutral-300"><span class="text-blue-500">🏆</span> <p class="leading-relaxed" data-en="3x3 single peak ranking 9th global" data-th="สถิติรูบิก 3x3 เวลาเร็วที่สุดเคยเป็นอันดับ 9 ของโลก">3x3 single peak ranking 9th global</p></li>
+                                    <li class="flex items-center gap-3 text-neutral-300"><span class="text-blue-500">🏅</span> <p class=""leading-relaxed data-en="Finalist in Continental Championship" data-th="เข้ารอบชิงในงานแข่งระดับทวีป">Finalist in Continental Championship</p></li>
+                                    <li class="flex items-center gap-3 text-neutral-300"><span class="text-blue-500">⏱️</span> <p class=""leading-relaxed data-en="10+ years experience" data-th="ประสบการณ์กว่า 10 ปี">10+ years experience</p></li>
                                 </ul>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                     <div id="wca-group" class="hidden">
                         <label class="block mb-2 text-neutral-400">🏆 WCA Event</label>
                         <select id="wca-event" class="w-full bg-neutral-900 border border-neutral-800 p-4 rounded-xl">
-                            <option value="">Select event</option>
+                            <option value="" data-en="Select event" data-th="เลือกประเภท">Select event</option>
                             <option>3x3</option>
                             <option>2x2</option>
                             <option>4x4</option>
@@ -116,25 +116,25 @@
                     </div>
 
                     <div id="availability-group" class="hidden">
-                        <label class="block mb-3 text-neutral-400">📅 Available Day</label>
+                        <label class="block mb-3 text-neutral-400" data-en="📅 Available Day" data-th="📅 วันที่สะดวก">📅 Available Day</label>
                         <div id="available-date" class="flex flex-wrap gap-3">
-                            <label class="cursor-pointer"><input type="checkbox" value="Mon" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Mon</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Tue" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Tue</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Wed" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Wed</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Thu" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Thu</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Fri" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Fri</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Sat" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Sat</span></label>
-                            <label class="cursor-pointer"><input type="checkbox" value="Sun" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600">Sun</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Mon" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Mon" data-th="จันทร์">Mon</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Tue" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Tue" data-th="อังคาร">Tue</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Wed" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Wed" data-th="พุธ">Wed</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Thu" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Thu" data-th="พฤหัส">Thu</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Fri" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Fri" data-th="ศุกร์">Fri</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Sat" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Sat" data-th="เสาร์">Sat</span></label>
+                            <label class="cursor-pointer"><input type="checkbox" value="Sun" class="hidden peer"><span class="px-4 py-2 rounded-full bg-neutral-800 peer-checked:bg-blue-600" data-en="Sun" data-th="อาทิตย์">Sun</span></label>
                         </div>
                     </div>
 
                     <div id="time-group" class="hidden space-y-6">
                         <div>
-                            <label class="block mb-2 text-neutral-400">⏰ Most Preferred Starting Time</label>
+                            <label class="block mb-2 text-neutral-400" data-en="⏰ Most Preferred Starting Time" data-th="⏰ เวลาที่สะดวกที่สุด">⏰ Most Preferred Starting Time</label>
                             <select id="preferred-time" class="w-full bg-neutral-900 border border-neutral-800 p-4 rounded-xl"></select>
                         </div>
                         <div>
-                            <label class="block mb-2 text-neutral-400">🕰️ Secondary Preferred Starting Time</label>
+                            <label class="block mb-2 text-neutral-400" data-en="🕰️ Secondary Preferred Starting Time" data-th="🕰️ เวลาสำรองที่สะดวก">🕰️ Secondary Preferred Starting Time</label>
                             <select id="secondary-time" class="w-full bg-neutral-900 border border-neutral-800 p-4 rounded-xl"></select>
                         </div>
                     </div>
