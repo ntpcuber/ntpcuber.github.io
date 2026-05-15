@@ -120,6 +120,50 @@ const translations = {
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwqbpCMgiHXTgaCYfqt2z3WWfIdE6AEpUcf5pvsYHh5ZMF7a5lzWJYP8W0NFjsT4B0/exec';
 
+/**
+ * Compresses an image file and returns a Base64 string.
+ * @param {File} file - The original image file.
+ * @param {number} maxWidth - Maximum width in pixels (default 1000).
+ * @param {number} quality - Compression quality from 0 to 1 (default 0.7).
+ */
+async function compressImage(file, maxWidth = 1000, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // 1. Calculate new dimensions while maintaining aspect ratio
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // 2. Draw image to canvas
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // 3. Export as JPEG with reduced quality
+                // Returns data:image/jpeg;base64,...
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                
+                // Return only the base64 string part
+                resolve(dataUrl.split(',')[1]);
+            };
+            img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+    });
+}
+
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -135,8 +179,17 @@ async function handleSubmit(event) {
     const serviceValue = document.getElementById('service-select').value.toLowerCase();
     const selectedDays = Array.from(document.querySelectorAll('#available-date input:checked')).map(el => el.value);
     const receiptFile = document.getElementById('receipt-upload').files[0];
+    // --- ส่วนที่เพิ่มใหม่: ตรวจสอบขนาดไฟล์ (2MB = 2 * 1024 * 1024 bytes) ---
+    const MAX_SIZE = 2 * 1024 * 1024; 
+    if (receiptFile && receiptFile.size > MAX_SIZE) {
+        const errorMsg = window.currentLang === 'en' 
+            ? "File is too large! Please upload an image smaller than 2MB." 
+            : "ไฟล์มีขนาดใหญ่เกินไป! กรุณาแนบรูปภาพที่มีขนาดไม่เกิน 2MB";
+        alert(errorMsg);
+        return; // หยุดการทำงานทันที ไม่ส่งข้อมูล
+    }
 
-    if (!serviceValue.includes('critique') && selectedDays.length === 0) {
+    if (!serviceValue.includes('analysis') && selectedDays.length === 0) {
         alert(window.currentLang === 'en' ? 'Please select at least one available day.' : 'กรุณาเลือกวันที่สะดวกอย่างน้อย 1 วัน');
         return;
     }
@@ -146,7 +199,16 @@ async function handleSubmit(event) {
 
     try {
         let base64Receipt = "";
-        if (receiptFile) base64Receipt = await toBase64(receiptFile);
+        // if (receiptFile) base64Receipt = await toBase64(receiptFile);
+        if (receiptFile) {
+            // Check if it's an image before trying to compress
+            if (receiptFile.type.startsWith('image/')) {
+                base64Receipt = await compressImage(receiptFile, 1000, 0.7);
+            } else {
+                // Fallback for non-image files (like PDFs)
+                base64Receipt = await toBase64(receiptFile);
+            }
+        }
 
         const data = {
             name: document.getElementById('input-name').value,
@@ -159,10 +221,11 @@ async function handleSubmit(event) {
             videoLink: document.getElementById('video-link').value,
             wcaEvent: document.getElementById('wca-event').value,
             receiptData: base64Receipt,
-            receiptName: receiptFile ? receiptFile.name : "receipt.png"
+            // receiptName: receiptFile ? receiptFile.name : "receipt.png"
+            receiptName: receiptFile ? receiptFile.name.replace(/\.[^/.]+$/, ".jpg") : "receipt.jpg"
         };
 
-        if (serviceValue.includes('critique')) {
+        if (serviceValue.includes('analysis')) {
             data.availableDate = ""; data.preferredTime = ""; data.secondaryTime = ""; data.wcaEvent = "";
         } else {
             data.videoLink = "";
@@ -244,7 +307,7 @@ function renderProgressBlocks(mode) {
 function updateProgressBlocks(stepNumber) {
     const blocks = document.querySelectorAll('.progress-block');
     const service = document.getElementById('service-select').value;
-    const isCritique = service && service.includes('Critique');
+    const isCritique = service && service.includes('Analysis');
     
     const totalSteps = isCritique ? 2 : 3;
 
@@ -304,7 +367,7 @@ function showStep(stepNumber) {
     // if (target) target.classList.remove('hidden');
 
     const service = document.getElementById('service-select').value;
-    const isCritique = service && service.toLowerCase().includes('critique');
+    const isCritique = service && service.toLowerCase().includes('analysis');
     
     renderProgressBlocks(isCritique ? 2 : 3);
     
@@ -316,7 +379,7 @@ function showStep(stepNumber) {
 
 function nextStep(step) {
     // Determine which step we are currently on
-    const fromStep = step > 1 ? (step === 3 && document.getElementById('service-select').value.toLowerCase().includes('critique') ? 1 : step - 1) : 1;
+    const fromStep = step > 1 ? (step === 3 && document.getElementById('service-select').value.toLowerCase().includes('analysis') ? 1 : step - 1) : 1;
     const currentContainer = document.getElementById(`step-${currentStep}`);
 
     // Check validity of all required inputs in the CURRENT step only
@@ -330,7 +393,7 @@ function nextStep(step) {
     if (!allValid && step > currentStep) return; // Block forward movement if invalid
     
     const serviceValue = document.getElementById('service-select').value.toLowerCase();
-    const isCritique = serviceValue.includes('critique');
+    const isCritique = serviceValue.includes('Analysis');
 
     // Skip Step 2 (Logistics) if it's a Critique service
     if (step === 2 && isCritique) {
