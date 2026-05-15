@@ -120,6 +120,8 @@ const translations = {
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwqbpCMgiHXTgaCYfqt2z3WWfIdE6AEpUcf5pvsYHh5ZMF7a5lzWJYP8W0NFjsT4B0/exec';
 
+let cachedReceiptBase64 = "";
+
 /**
  * Compresses an image file and returns a Base64 string.
  * @param {File} file - The original image file.
@@ -197,18 +199,24 @@ async function handleSubmit(event) {
     btn.disabled = true;
     btn.innerText = content.sending;
 
+    console.time('total-submit');
+    console.time('compression');
     try {
-        let base64Receipt = "";
-        // if (receiptFile) base64Receipt = await toBase64(receiptFile);
-        if (receiptFile) {
-            // Check if it's an image before trying to compress
-            if (receiptFile.type.startsWith('image/')) {
-                base64Receipt = await compressImage(receiptFile, 1000, 0.7);
-            } else {
-                // Fallback for non-image files (like PDFs)
-                base64Receipt = await toBase64(receiptFile);
-            }
-        }
+        // let base64Receipt = "";
+        // // if (receiptFile) base64Receipt = await toBase64(receiptFile);
+        // if (receiptFile) {
+        //     // Check if it's an image before trying to compress
+        //     if (receiptFile.type.startsWith('image/')) {
+        //         base64Receipt = await compressImage(receiptFile, 1000, 0.7);
+        //     } else {
+        //         // Fallback for non-image files (like PDFs)
+        //         base64Receipt = await toBase64(receiptFile);
+        //     }
+        // }
+
+        let base64Receipt = cachedReceiptBase64;
+        console.log('Cache hit?', !!base64Receipt); // true = compression already done
+        console.timeEnd('compression');
 
         const data = {
             name: document.getElementById('input-name').value,
@@ -231,16 +239,28 @@ async function handleSubmit(event) {
             data.videoLink = "";
         }
 
-        await fetch(SCRIPT_URL, {
+        console.time('fetch');
+        fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors', 
             //cache: 'no-cache',
             //headers: { 'Content-Type': 'application/json' },
             headers: {'Content-Type': 'text/plain;charset=utf-8'},
             body: JSON.stringify(data)
-        });
+        }).catch(err => console.error('Background send failed:', err)); // to don't let user wait for backend
         
+        // Alert instantly
         alert(content.success);
+
+        console.timeEnd('fetch'); // should be near 0ms now
+        console.timeEnd('total-submit');
+
+        // const msg = document.getElementById('success-msg');
+        // msg.textContent = content.success;
+        // msg.classList.remove('hidden');
+        // setTimeout(() => msg.classList.add('hidden'), 5000); // auto-hide after 5s
+
+        cachedReceiptBase64 = "";
         event.target.reset();
         showStep(1);                      // Return UI to Step 1
         toggleSubmitButton();
@@ -660,6 +680,17 @@ document.addEventListener('DOMContentLoaded', () => {
     //toggleLang();
     render();
     
+    document.getElementById('receipt-upload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) { cachedReceiptBase64 = ""; return; }
+
+        if (file.type.startsWith('image/')) {
+            cachedReceiptBase64 = await compressImage(file, 1000, 0.7);
+        } else {
+            cachedReceiptBase64 = await toBase64(file);
+        }
+    });
+
     // Default to 1 block until a service is selected
     renderProgressBlocks(1);
     updateProgressBlocks(1);
