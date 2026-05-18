@@ -47,12 +47,12 @@ const translations = {
         success: "Success! Check your email soon.",
         bookNow: "Book Now",
         services: [
-            { name: "Written Critique (Video Analysis)", price: "฿130", desc: ["Detailed breakdown of 5 recorded solves.",
+            { name: "Written Critique (Video Analysis)", price: "฿200", desc: ["Detailed breakdown of 5 recorded solves.",
                                                                                 "Identify strengths and inefficiencies",
                                                                                 "Lookahead and turning analysis",
                                                                                 "Personalized feedback and improvement guide"
                                                                                 ]},
-            { name: "Video Critique (Video Analysis)", price: "฿220", desc: ["Detailed breakdown of 5 recorded solves.",
+            { name: "Video Critique (Video Analysis)", price: "฿360", desc: ["Detailed breakdown of 5 recorded solves.",
                                                                                 "Identify strengths and inefficiencies",
                                                                                 "Lookahead and turning analysis",
                                                                                 "Ergonomics suggestions",
@@ -90,12 +90,12 @@ const translations = {
         success: "สำเร็จ! โปรดรอการติดต่อกลับทางอีเมล",
         bookNow: "จองเลย",
         services: [
-            { name: "ตรวจการแก้แบบเขียน (Video Analysis)", price: "฿130", desc: ["วิเคราะห์การแก้ 5 รอบแบบละเอียด",
+            { name: "ตรวจการแก้แบบเขียน (Video Analysis)", price: "฿200", desc: ["วิเคราะห์การแก้ 5 รอบแบบละเอียด",
                                                                                 "ชี้ให้เห็นจุดแข็งและจุดที่่พัฒนาได้",
                                                                                 "วิเคราะห์ความสามารถในการมองล่วงหน้าและการหมุน",
                                                                                 "ให้คำแนะนำและแนวทางการฝึกฝนที่เฉพาะเจาะจง"
                                                                               ] },
-            { name: "ตรวจการแก้แบบวิดีโอ (Video Analysis)", price: "฿220", desc: ["วิเคราะห์การแก้ 5 รอบแบบละเอียด",
+            { name: "ตรวจการแก้แบบวิดีโอ (Video Analysis)", price: "฿360", desc: ["วิเคราะห์การแก้ 5 รอบแบบละเอียด",
                                                                                 "ชี้ให้เห็นจุดแข็งและจุดที่พัฒนาได้",
                                                                                 "วิเคราะห์ความสามารถในการมองล่วงหน้าและการหมุน",
                                                                                 "แนะนำวิธีการหมุนที่เสริมความคล่องตัวยิ่งขึ้น",

@@ -28,7 +28,7 @@ class MyNavbar extends HTMLElement {
         this.innerHTML = `
         <header class="sticky top-0 z-50 bg-neutral-900/80 backdrop-blur-md border-b border-neutral-800/50">
             <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-                <div class="font-bold text-xl tracking-tighter cursor-pointer" onclick="window.location.href='index.html'">
+                <div class="font-bold text-xl tracking-tighter cursor-pointer" onclick="window.location.href='/index.html'">
                     NTP Cuber <span class="text-blue-500">Academy</span>
                 </div>
                 
