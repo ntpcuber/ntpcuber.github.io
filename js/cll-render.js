@@ -2,7 +2,9 @@ const NAV_ID = "subset-nav";
 const SECTIONS_ID = "cll-sections";
 
 // Adjust if you choose a different folder for JSON
-const DATA_URL = "../algorithms/2x2/cll-data.json";
+// const DATA_URL = "../algorithms/2x2/cll-data.json";
+// If cll-render.js is in /js and cll-data.json is in /data
+const DATA_URL = new URL("../algorithms/2x2/cll-data.json", import.meta.url);
 
 let cllSets = [];
 
