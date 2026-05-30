@@ -185,12 +185,27 @@
       setLoading('login-btn', true);
       clearMessages();
       try {
-        await _NTPAuth.signIn(
+        const { data } = await _NTPAuth.signIn(
           document.getElementById('login-email').value.trim(),
           document.getElementById('login-password').value
         );
+
+        // --- NEW LOGIC START ---
+        const user = data.user;
+        const isAdmin = user?.app_metadata?.is_admin === true;
+        
         const params = new URLSearchParams(location.search);
-        location.href = params.get('next') || '/dashboard.html';
+        const nextPath = params.get('next');
+
+        if (nextPath) {
+          location.href = nextPath;
+        } else if (isAdmin) {
+          location.href = '/admin.html'; // Send admins here
+        } else {
+          location.href = '/dashboard.html'; // Send regular users here
+        }
+        // --- NEW LOGIC END ---
+
       } catch(err) {
         showError(err.message);
       } finally {
