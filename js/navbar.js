@@ -235,3 +235,4 @@ class MyNavbar extends HTMLElement {
 }
 
 customElements.define('my-navbar', MyNavbar);
+
