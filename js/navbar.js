@@ -22,6 +22,8 @@ class MyNavbar extends HTMLElement {
         this.render();
         // Listen for a custom event so the navbar updates when the language changes elsewhere
         window.addEventListener('languageChanged', () => this.updateLanguageDisplay());
+        // Init auth widget after render
+        this.initAuth();
     }
 
     render() {
@@ -97,7 +99,11 @@ class MyNavbar extends HTMLElement {
                     </div>
                 </nav>
                 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
+
+                    <!-- Auth Button (desktop) — populated by renderAuthWidget() -->
+                    <div id="ntp-auth-widget" class="hidden md:block"></div>
+
                     <button
                         id="lang-btn-nav"
                         type="button"
@@ -119,6 +125,9 @@ class MyNavbar extends HTMLElement {
                     <a href="${this.rootPath}index.html" class="nav-link text-neutral-400 py-2 border-b border-neutral-800/50" data-en="Home" data-th="หน้าแรก">Home</a>
                     <a href="${this.rootPath}404.html" class="nav-link text-neutral-400 py-2 border-b border-neutral-800/50" data-en="Courses (Coming Soon)" data-th="คอร์สเรียน (เร็ว ๆ นี้)">Courses (Coming Soon)</a>
                     <a href="${this.rootPath}coaching.html" class="nav-link text-neutral-400 py-2 border-b border-neutral-800/50" data-en="Coaching" data-th="เรียนตัวต่อตัว">Coaching</a>
+
+                    <!-- Auth links (mobile) — populated by renderAuthWidget() -->
+                    <div id="ntp-auth-widget-mobile" class="py-2 border-b border-neutral-800/50"></div>
                     
                     <!-- Resources Section with Mobile Toggle -->
                     <div class="flex flex-col border-b border-neutral-800/50">
@@ -232,7 +241,125 @@ class MyNavbar extends HTMLElement {
             langText.textContent = lang === 'en' ? 'TH' : 'EN';
         }
     }
+
+    // ── Auth ──────────────────────────────────────────────────
+
+    async initAuth() {
+        // Requires supabase-config.js to be loaded before navbar.js
+        if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON === 'undefined') return;
+
+        // Dynamically import Supabase (ESM CDN)
+        const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+        this._sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+        await this.renderAuthWidget();
+
+        // Re-render on login/logout
+        this._sb.auth.onAuthStateChange(() => this.renderAuthWidget());
+    }
+
+    async renderAuthWidget() {
+        const desktop = this.querySelector('#ntp-auth-widget');
+        const mobile  = this.querySelector('#ntp-auth-widget-mobile');
+        if (!desktop || !mobile) return;
+
+        const { data: { user } } = await this._sb.auth.getUser();
+
+        if (!user) {
+            // ── Logged out ──────────────────────────────────
+            desktop.innerHTML = `
+                <a href="/login.html"
+                   class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 transition text-xs font-bold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9A3.75 3.75 0 1 1 8.25 9a3.75 3.75 0 0 1 7.5 0zM4.5 20.118a7.5 7.5 0 0 1 15 0"/>
+                    </svg>
+                    Login
+                </a>`;
+
+            mobile.innerHTML = `
+                <a href="/login.html" class="flex items-center gap-2 text-neutral-400 text-sm font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9A3.75 3.75 0 1 1 8.25 9a3.75 3.75 0 0 1 7.5 0zM4.5 20.118a7.5 7.5 0 0 1 15 0"/>
+                    </svg>
+                    Login / Sign Up
+                </a>`;
+
+        } else {
+            // ── Logged in ───────────────────────────────────
+            const name     = user.user_metadata?.full_name || user.email.split('@')[0];
+            const initials = name.slice(0, 2).toUpperCase();
+            const avatar   = user.user_metadata?.avatar_url;
+
+            const avatarHtml = avatar
+                ? `<img src="${avatar}" class="w-6 h-6 rounded-full object-cover">`
+                : `<div style="width:1.5rem;height:1.5rem;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#fff;">${initials}</div>`;
+
+            // Desktop: avatar + name + dropdown
+            desktop.innerHTML = `
+                <div style="position:relative;">
+                    <button id="ntp-avatar-btn" style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:9999px;padding:.3rem .75rem .3rem .3rem;cursor:pointer;transition:border-color .15s;"
+                        onmouseover="this.style.borderColor='rgba(99,102,241,.5)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
+                        ${avatarHtml}
+                        <span style="font-size:.75rem;font-weight:700;color:#e5e7eb;max-width:6rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name.split(' ')[0]}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="ntp-avatar-menu" style="display:none;position:absolute;right:0;top:calc(100% + .4rem);min-width:11rem;background:#111113;border:1px solid #27272a;border-radius:1rem;padding:.4rem;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.5);">
+                        <div style="padding:.5rem .75rem;border-bottom:1px solid #27272a;margin-bottom:.3rem;">
+                            <p style="font-size:.65rem;color:#6b7280;margin:0;">Signed in as</p>
+                            <p style="font-size:.75rem;font-weight:600;color:#e5e7eb;margin:0;overflow:hidden;text-overflow:ellipsis;">${user.email}</p>
+                        </div>
+                        <a href="/dashboard.html" style="display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;border-radius:.5rem;font-size:.78rem;font-weight:600;color:#d1d5db;text-decoration:none;transition:background .1s;"
+                            onmouseover="this.style.background='rgba(79,70,229,.15)'" onmouseout="this.style.background='transparent'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                            </svg>
+                            My Dashboard
+                        </a>
+                        <button onclick="window._ntpSb && window._ntpSb.auth.signOut().then(() => location.href='/index.html')"
+                            style="display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .75rem;border-radius:.5rem;font-size:.78rem;font-weight:600;color:#f87171;background:none;border:none;cursor:pointer;text-align:left;transition:background .1s;"
+                            onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                            </svg>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>`;
+
+            // Expose supabase client for the inline sign-out button above
+            window._ntpSb = this._sb;
+
+            // Dropdown toggle
+            const btn  = desktop.querySelector('#ntp-avatar-btn');
+            const menu = desktop.querySelector('#ntp-avatar-menu');
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            });
+            document.addEventListener('click', () => { if (menu) menu.style.display = 'none'; });
+
+            // Mobile: simple links
+            mobile.innerHTML = `
+                <div class="flex flex-col gap-2">
+                    <a href="/dashboard.html" class="flex items-center gap-2 text-neutral-400 text-sm font-semibold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        My Dashboard
+                    </a>
+                    <button onclick="window._ntpSb && window._ntpSb.auth.signOut().then(() => location.href='/index.html')"
+                        class="flex items-center gap-2 text-red-400 text-sm font-semibold bg-none border-none p-0 cursor-pointer text-left">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"/>
+                        </svg>
+                        Sign Out
+                    </button>
+                </div>`;
+        }
+    }
 }
 
 customElements.define('my-navbar', MyNavbar);
-
